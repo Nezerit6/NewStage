@@ -37,7 +37,7 @@ public class NewStageBlocks {
             shootY = 6.5f;
             heatColor = Color.valueOf("AFEEEE");
             inaccuracy = 3;
-            liquidCapacity = 70;
+            liquidCapacity = 60;
             squareSprite = false;
             shootSound = NewStageSounds.bigLaserShoot;
             loopSound = Sounds.none;
@@ -67,6 +67,8 @@ public class NewStageBlocks {
                         homingPower = 0.03f;
                         homingDelay = 2f;
                         homingRange = 60f;
+                        ammoPerShot = 10;
+                        ammoMultiplier = 0.2f;
                     }}
             );
 

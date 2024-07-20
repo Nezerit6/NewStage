@@ -21,42 +21,44 @@ public class NewStageUnits {
             constructor = UnitEntity::create;
             flying = true;
             drag = 0.05f;
-            speed = 2.6f;
-            rotateSpeed = 15f;
+            speed = 3.2f;
+            rotateSpeed = 7f;
             accel = 0.1f;
-            range = 130f;
-            health = 400;
-            engineOffset = 6.5f;
-            hitSize = 9f;
+            health = 260;
+            engineOffset = 5.5f;
+            hitSize = 8f;
+            itemCapacity = 5;
+            range = 300;
 
             weapons.add(new Weapon("nstage-w2") {{
                 top = true;
                 mirror = false;
-                y = 0f;
+                y = -2f;
                 x = 0f;
-                reload = 30f;
+                reload = 45f;
                 recoil = 1f;
                 shootSound = Sounds.missile;
-                velocityRnd = 0.5f;
-                inaccuracy = 15f;
+                //velocityRnd = 0.5f;
+                rotate = true;
+                rotationLimit = 80;
 
-                bullet = new BasicBulletType(3f, 20) {{
-                    lifetime = 60f;
-                    trailLength = 15;
-                    trailWidth = 1.6f;
-                    trailSinScl = 2f;
-                    trailSinMag = 0.5f;
+                bullet = new BasicBulletType(6.5f, 10) {{
+                    lifetime = 35f;
+                    trailLength = 2;
+                    trailWidth = 1.8f;
+                    //trailSinScl = 2f;
+                    //trailSinMag = 0.5f;
                     trailEffect = Fx.none;
-                    trailColor = Color.valueOf("FF6F89FF");
-                    frontColor = Color.white;
-                    backColor = Color.valueOf("D85876FF");
-                    width = 7;
-                    height = 8;
+                    trailColor = backColor = Color.valueOf("FF6F89FF");
+                    //frontColor = Color.white;
+                    width = 5;
+                    height = 6;
+                    despawnEffect = Fx.fuelburn;
                 }};
             }});
         }};
 
-        frontis = new UnitType("frontis") {{
+/*        frontis = new UnitType("frontis") {{
             constructor = UnitEntity::create;
             flying = true;
             drag = 0.05f;
@@ -147,7 +149,7 @@ public class NewStageUnits {
             speed = 2.5f;
             flying = true;
             constructor = UnitEntity::create;
-        }};
+        }};*/
 
         //T1
         UnitFactory airFactory = (UnitFactory) Blocks.airFactory;

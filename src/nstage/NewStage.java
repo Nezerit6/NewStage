@@ -2,10 +2,7 @@ package nstage;
 
 import arc.util.*;
 import mindustry.mod.*;
-import nstage.content.NewStageBlocks;
-import nstage.content.NewStageItems;
-import nstage.content.NewStageSounds;
-import nstage.content.NewStageUnits;
+import nstage.content.*;
 
 public class NewStage extends Mod{
 
@@ -40,6 +37,7 @@ public class NewStage extends Mod{
         NewStageItems.load();
         NewStageUnits.load();
         NewStageBlocks.load();
+        NewStageTechTree.load();
 
     }
 }
