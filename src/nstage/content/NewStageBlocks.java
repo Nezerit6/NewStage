@@ -1,28 +1,23 @@
 package nstage.content;
 
 import arc.graphics.Color;
-import mindustry.content.Fx;
-import mindustry.content.Items;
-import mindustry.content.Liquids;
-import mindustry.content.StatusEffects;
-import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.bullet.LaserBoltBulletType;
+import mindustry.content.*;
+import mindustry.entities.bullet.*;
 import mindustry.entities.effect.MultiEffect;
-import mindustry.entities.part.DrawPart;
-import mindustry.entities.part.RegionPart;
+import mindustry.entities.part.*;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
 import mindustry.world.Block;
-import mindustry.world.blocks.defense.turrets.LiquidTurret;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.draw.DrawTurret;
+import nstage.world.blocks.power.*;
 
 import static mindustry.type.ItemStack.with;
 
 public class NewStageBlocks {
 
-    public static Block plasmaPunisher, stormBringer;
+    public static Block plasmaPunisher, stormBringer, mistGatherer;
 
     public static void load() {
 
@@ -132,6 +127,19 @@ public class NewStageBlocks {
                         }}
                 );
             }};
+        }};
+
+        //WIP
+        mistGatherer = new MistGatherer("based-block-2"){{
+            requirements(Category.power, with(Items.copper, 40, Items.lead, 30, Items.metaglass, 30, Items.silicon, 25));
+
+            health = 150;
+            squareSprite = true;
+            size = 2;
+            liquidCapacity = 30;
+            hasLiquids = true;
+            collectEffect = NewStageFx.steamAbsorption;
+
         }};
     }
 }
