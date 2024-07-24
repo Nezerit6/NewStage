@@ -11,6 +11,7 @@ import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.draw.DrawTurret;
+import nstage.entities.bullet.*;
 import nstage.world.blocks.power.*;
 
 import static mindustry.type.ItemStack.with;
@@ -34,6 +35,8 @@ public class NewStageBlocks {
             inaccuracy = 3;
             liquidCapacity = 60;
             squareSprite = false;
+            extinguish = false;
+            targetAir = false;
             shootSound = NewStageSounds.bigLaserShoot;
             loopSound = Sounds.none;
             shootEffect = Fx.none;
@@ -44,26 +47,37 @@ public class NewStageBlocks {
             consumePower(3.6f);
 
             ammo(
-                    Liquids.cryofluid, new BasicBulletType(12.6f, 35){{
-                        despawnEffect = Fx.colorSpark;
+                    Liquids.cryofluid, new BasicBulletType(12.6f, 45) {{
+                        //despawnEffect = Fx.colorSpark;
                         hitEffect = Fx.none;
                         lifetime = 17.5f;
                         width = 4;
                         height = 28;
-                        ammoMultiplier = 1;
-                        splashDamageRadius = 32f * 0.50f;
-                        splashDamage = 20f;
+                        //splashDamageRadius = 32f * 0.50f;
+                        //splashDamage = 20f;
                         chargeEffect = new MultiEffect(Fx.lancerLaserCharge, Fx.lancerLaserChargeBegin);
-                        status = StatusEffects.shocked;
-                        statusDuration = 240f;
+                        //statusDuration = 240f;
                         hitColor = backColor = trailColor = Color.valueOf("afeeee");
                         trailLength = 3;
                         trailWidth = 1.9f;
                         homingPower = 0.03f;
                         homingDelay = 2f;
                         homingRange = 60f;
-                        ammoPerShot = 10;
-                        ammoMultiplier = 0.2f;
+                        ammoMultiplier = 2f / 10f;
+                        collidesAir = false;
+                        fragBullets = 1;
+
+                        fragBullet = new AftershockBulletType(20f, 20) {{
+                            splashAmount = 2;
+                            splashDelay = 70f;
+                            hitEffect = Fx.none;
+                            collidesAir = false;
+                            splashDamageRadius = 20f * 0.50f;
+                            //chargeEffect = new MultiEffect(Fx.lancerLaserCharge, Fx.lancerLaserChargeBegin);
+                            status = StatusEffects.freezing;
+                            statusDuration = 160f;
+                            frontColor = hitColor = backColor = trailColor = Color.valueOf("afeeee");
+                        }};
                     }}
             );
 
@@ -82,7 +96,7 @@ public class NewStageBlocks {
             }};
         }};
 
-        stormBringer = new PowerTurret("StormBringer"){{
+        stormBringer = new PowerTurret("StormBringer") {{
             requirements(Category.turret, with(Items.copper, 210, Items.lead, 90, Items.titanium, 50, Items.silicon, 40));
             size = 2;
             range = 130;
@@ -102,7 +116,7 @@ public class NewStageBlocks {
             consumePower(1.4f);
             coolant = consumeCoolant(0.2f);
 
-            shootType = new LaserBoltBulletType(6, 13){{
+            shootType = new LaserBoltBulletType(6, 13) {{
                 knockback = 0.3f;
                 lifetime = 20f;
                 backColor = Pal.heal;
@@ -118,7 +132,7 @@ public class NewStageBlocks {
 
             drawer = new DrawTurret("based-") {{
                 parts.addAll(
-                        new RegionPart("-side"){{
+                        new RegionPart("-side") {{
                             progress = PartProgress.warmup;
                             mirror = true;
                             under = false;
@@ -129,17 +143,15 @@ public class NewStageBlocks {
             }};
         }};
 
-        //WIP
-        mistGatherer = new MistGatherer("based-block-2"){{
+        // WIP
+        mistGatherer = new MistGatherer("based-block-2") {{
             requirements(Category.power, with(Items.copper, 40, Items.lead, 30, Items.metaglass, 30, Items.silicon, 25));
-
             health = 150;
             squareSprite = true;
             size = 2;
             liquidCapacity = 30;
             hasLiquids = true;
             collectEffect = NewStageFx.steamAbsorption;
-
         }};
     }
 }

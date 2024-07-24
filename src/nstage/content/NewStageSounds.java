@@ -10,7 +10,8 @@ public class NewStageSounds {
     public static Sound placeholder,
 
     bigLaserShoot = new Sound(),
-            smallLaserShoot = new Sound();
+    smallLaserShoot = new Sound(),
+    kamikaze = new Sound();
 
     protected static Sound loadSound(String fileName) {
         String name = "sounds/" + fileName;
@@ -28,5 +29,6 @@ public class NewStageSounds {
 
         bigLaserShoot = loadSound("bigLaserShoot");
         smallLaserShoot = loadSound("smallLaserShoot");
+        kamikaze = loadSound("kamikaze");
     }
 }

@@ -1,5 +1,6 @@
 package nstage.content;
 
+import nstage.ai.types.*;
 import arc.graphics.Color;
 import mindustry.content.Blocks;
 import mindustry.content.Fx;
@@ -18,17 +19,19 @@ public class NewStageUnits {
 
     public static void load() {
         navicula = new UnitType("navicula") {{
+            aiController = KamikazeAI::new;
             constructor = UnitEntity::create;
+
             flying = true;
             drag = 0.05f;
             speed = 3.2f;
             rotateSpeed = 7f;
             accel = 0.1f;
-            health = 260;
+            health = 305;
             engineOffset = 5.5f;
             hitSize = 8f;
             itemCapacity = 5;
-            range = 300;
+            range = 240;
 
             weapons.add(new Weapon("nstage-w2") {{
                 top = true;
@@ -153,7 +156,7 @@ public class NewStageUnits {
 
         //T1
         UnitFactory airFactory = (UnitFactory) Blocks.airFactory;
-        airFactory.plans.add(new UnitFactory.UnitPlan(navicula, 60f * 5, ItemStack.with(Items.silicon, 30, Items.lead, 20)));
+        airFactory.plans.add(new UnitFactory.UnitPlan(navicula, 160f * 5, ItemStack.with(Items.silicon, 30, Items.lead, 20, Items.pyratite, 5)));
         //T2
         /*Reconstructor additiveReconstructor = (Reconstructor) Blocks.additiveReconstructor;
         additiveReconstructor.upgrades.add(new UnitType[]{NewStageUnits.navicula, frontis});*/
