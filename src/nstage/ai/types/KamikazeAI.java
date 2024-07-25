@@ -42,12 +42,8 @@ public class KamikazeAI extends FlyingAI {
 
                 if (target != null) {
                     moveToTarget = true;
-                    unit.movePref(vec.set(target).sub(unit).limit(unit.speed()));
+                    unit.movePref(vec.set(target).sub(unit).limit(unit.speed() * 1.5f));
                 }
-            }
-            //Todo balanced?
-            if (moveToTarget) {
-                unit.movePref(vec.set(target).sub(unit).limit(unit.speed() * 2f));
             }
 
             unit.controlWeapons(rotate, shoot);

@@ -20,6 +20,7 @@ public class NewStageUnits {
     public static void load() {
         navicula = new UnitType("navicula") {{
             aiController = KamikazeAI::new;
+            controller = u -> new KamikazeAI();
             constructor = UnitEntity::create;
 
             flying = true;
@@ -45,7 +46,7 @@ public class NewStageUnits {
                 rotate = true;
                 rotationLimit = 80;
 
-                bullet = new BasicBulletType(6.5f, 10) {{
+                bullet = new BasicBulletType(6.5f, 9) {{
                     lifetime = 35f;
                     trailLength = 2;
                     trailWidth = 1.8f;
@@ -156,7 +157,7 @@ public class NewStageUnits {
 
         //T1
         UnitFactory airFactory = (UnitFactory) Blocks.airFactory;
-        airFactory.plans.add(new UnitFactory.UnitPlan(navicula, 160f * 5, ItemStack.with(Items.silicon, 30, Items.lead, 20, Items.pyratite, 5)));
+        airFactory.plans.add(new UnitFactory.UnitPlan(navicula, 160f * 5, ItemStack.with(Items.silicon, 40, Items.lead, 30)));
         //T2
         /*Reconstructor additiveReconstructor = (Reconstructor) Blocks.additiveReconstructor;
         additiveReconstructor.upgrades.add(new UnitType[]{NewStageUnits.navicula, frontis});*/
