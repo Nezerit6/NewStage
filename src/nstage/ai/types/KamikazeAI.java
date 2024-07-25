@@ -1,17 +1,13 @@
 package nstage.ai.types;
 
 import mindustry.*;
-import mindustry.ai.*;
 import mindustry.ai.types.*;
 import mindustry.content.*;
 import mindustry.entities.*;
 import mindustry.gen.*;
-import mindustry.world.*;
 import mindustry.world.blocks.distribution.*;
 import mindustry.world.blocks.liquid.*;
 import nstage.content.NewStageSounds;
-
-import static mindustry.Vars.*;
 
 public class KamikazeAI extends FlyingAI {
     private boolean playedSound = false;
@@ -48,25 +44,10 @@ public class KamikazeAI extends FlyingAI {
                     moveToTarget = true;
                     unit.movePref(vec.set(target).sub(unit).limit(unit.speed()));
                 }
-
-                if (unit.within(target, unit.type.weapons.first().bullet.range / 2f)) {
-                    explode();
-                }
             }
-
-            if (!moveToTarget) {
-                boolean move = true;
-
-                if (core == null && state.rules.waves && unit.team == state.rules.defaultTeam) {
-                    Tile spawner = getClosestSpawner();
-                    if (spawner != null && unit.within(spawner, state.rules.dropZoneRadius + 120f)) {
-                        move = false;
-                    }
-                }
-
-                if (move) {
-                    pathfind(Pathfinder.fieldCore);
-                }
+            //Todo balanced?
+            if (moveToTarget) {
+                unit.movePref(vec.set(target).sub(unit).limit(unit.speed() * 2f));
             }
 
             unit.controlWeapons(rotate, shoot);
@@ -76,11 +57,15 @@ public class KamikazeAI extends FlyingAI {
                 NewStageSounds.kamikaze.at(unit.x, unit.y);
                 playedSound = true;
             }
+
+            if (target != null && unit.within(target, unit.hitSize() + 5f)) {
+                explode();
+            }
         }
     }
 
     private void explode() {
-        Fx.smokeCloud.at(unit.x, unit.y);
+        Fx.explosion.at(unit.x, unit.y);
 
         Damage.damage(unit.x, unit.y, unit.hitSize() * 2f, unit.maxHealth() * 2f);
 

@@ -8,7 +8,7 @@ main: "nstage.NewStage"
 
 description: "Hi"
 
-version: "pre-alpha 0.1.3"
+version: "pre-alpha 0.1.3.1"
 
 minGameVersion: 146
 
