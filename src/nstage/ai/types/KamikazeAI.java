@@ -10,61 +10,81 @@ import mindustry.world.blocks.liquid.*;
 import nstage.content.NewStageSounds;
 
 public class KamikazeAI extends FlyingAI {
+    private static final float HEALTH_THRESHOLD = 0.35f;
     private boolean playedSound = false;
 
     @Override
     public void updateUnit() {
-        if (unit.healthf() > 0.35f) {
+        if (unit.healthf() > HEALTH_THRESHOLD) {
             super.updateUnit();
             playedSound = false;
         } else {
+            updateKamikazeMode();
+        }
+    }
 
-            if (Units.invalidateTarget(target, unit.team, unit.x, unit.y, Float.MAX_VALUE)) {
-                target = null;
+    private void updateKamikazeMode() {
+        updateTarget();
+        updateMovementAndAttack();
+        checkForExplosion();
+        Fx.incinerateSlag.at(unit.x, unit.y);
+        unit.apply(StatusEffects.burning);
+    }
+
+    private void updateTarget() {
+        if (Units.invalidateTarget(target, unit.team, unit.x, unit.y)) {
+            target = null;
+        }
+
+        if (retarget()) {
+            target = target(unit.x, unit.y, unit.range(), unit.type.targetAir, unit.type.targetGround);
+        }
+
+        if (target == null) {
+            target = unit.closestEnemyCore();
+        }
+    }
+
+    private void updateMovementAndAttack() {
+        boolean rotate = false, shoot = false;
+
+        if (!Units.invalidateTarget(target, unit, unit.range()) && unit.hasWeapons()) {
+            rotate = true;
+            shoot = isTargetInRange();
+
+            if (target != null) {
+                moveTowardsTarget();
             }
+        }
 
-            if (retarget()) {
-                target = target(unit.x, unit.y, unit.range(), unit.type.targetAir, unit.type.targetGround);
-            }
+        unit.controlWeapons(rotate, shoot);
+        faceTarget();
+    }
 
-            Building core = unit.closestEnemyCore();
+    private boolean isTargetInRange() {
+        float range = unit.type.weapons.first().bullet.range;
+        float targetSize = (target instanceof Building b) ? b.block.size * Vars.tilesize / 2f : ((Hitboxc) target).hitSize() / 2f;
+        return unit.within(target, range + targetSize);
+    }
 
-            if (target == null) {
-                target = core;
-            }
+    private void moveTowardsTarget() {
+        unit.movePref(vec.set(target).sub(unit).limit(unit.speed() * 1.5f));
+    }
 
-            boolean rotate = false, shoot = false, moveToTarget = false;
+    private void checkForExplosion() {
+        if (!playedSound && unit.healthf() <= HEALTH_THRESHOLD) {
+            NewStageSounds.kamikaze.at(unit.x, unit.y);
+            playedSound = true;
+        }
 
-            if (!Units.invalidateTarget(target, unit, unit.range()) && unit.hasWeapons()) {
-                rotate = true;
-                shoot = unit.within(target, unit.type.weapons.first().bullet.range +
-                        (target instanceof Building b ? b.block.size * Vars.tilesize / 2f : ((Hitboxc) target).hitSize() / 2f));
-
-                if (target != null) {
-                    moveToTarget = true;
-                    unit.movePref(vec.set(target).sub(unit).limit(unit.speed() * 1.5f));
-                }
-            }
-
-            unit.controlWeapons(rotate, shoot);
-            faceTarget();
-
-            if (!playedSound && unit.healthf() <= 0.35f) {
-                NewStageSounds.kamikaze.at(unit.x, unit.y);
-                playedSound = true;
-            }
-
-            if (target != null && unit.within(target, unit.hitSize() + 5f)) {
-                explode();
-            }
+        if (target != null && unit.within(target, unit.hitSize() + 5f)) {
+            explode();
         }
     }
 
     private void explode() {
         Fx.explosion.at(unit.x, unit.y);
-
         Damage.damage(unit.x, unit.y, unit.hitSize() * 2f, unit.maxHealth() * 2f);
-
         unit.kill();
     }
 

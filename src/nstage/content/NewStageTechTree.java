@@ -19,8 +19,11 @@ public class NewStageTechTree {
                 node(NewStageBlocks.stormBringer);
             });
         });
+        margeNode(Blocks.scorch, () -> {
+            node(NewStageBlocks.fireSquall);
+        });
         margeNode(UnitTypes.flare, () -> {
-            node(NewStageUnits.navicula);
+            node(NewStageUnits.flicker);
         });
     }
 

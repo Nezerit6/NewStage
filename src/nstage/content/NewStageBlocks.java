@@ -5,12 +5,14 @@ import mindustry.content.*;
 import mindustry.entities.bullet.*;
 import mindustry.entities.effect.MultiEffect;
 import mindustry.entities.part.*;
+import mindustry.entities.pattern.ShootAlternate;
 import mindustry.gen.Sounds;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.draw.DrawTurret;
+import mindustry.world.meta.BuildVisibility;
 import nstage.entities.bullet.*;
 import nstage.world.blocks.power.*;
 
@@ -18,7 +20,7 @@ import static mindustry.type.ItemStack.with;
 
 public class NewStageBlocks {
 
-    public static Block plasmaPunisher, stormBringer, mistGatherer;
+    public static Block plasmaPunisher, stormBringer, mistGatherer, fireSquall;
 
     public static void load() {
 
@@ -29,10 +31,10 @@ public class NewStageBlocks {
             recoil = 3f;
             size = 2;
             range = 205;
-            reload = 90f;
+            reload = 120f;
             shootY = 6.5f;
             heatColor = Color.valueOf("AFEEEE");
-            inaccuracy = 3;
+            inaccuracy = 5;
             liquidCapacity = 60;
             squareSprite = false;
             extinguish = false;
@@ -47,7 +49,7 @@ public class NewStageBlocks {
             consumePower(3.6f);
 
             ammo(
-                    Liquids.cryofluid, new BasicBulletType(12.6f, 45) {{
+                    Liquids.cryofluid, new BasicBulletType(12.6f, 36) {{
                         //despawnEffect = Fx.colorSpark;
                         hitEffect = Fx.none;
                         lifetime = 17.5f;
@@ -101,10 +103,10 @@ public class NewStageBlocks {
             size = 2;
             range = 130;
             recoil = 2f;
-            reload = 420f;
-            health = 600;
-            inaccuracy = 14;
-            rotateSpeed = 7;
+            reload = 550f;
+            health = 530;
+            inaccuracy = 19;
+            rotateSpeed = 5;
 
             shoot.shots = 32;
             shoot.shotDelay = 4;
@@ -116,7 +118,7 @@ public class NewStageBlocks {
             consumePower(1.4f);
             coolant = consumeCoolant(0.2f);
 
-            shootType = new LaserBoltBulletType(6, 13) {{
+            shootType = new LaserBoltBulletType(6, 8) {{
                 knockback = 0.3f;
                 lifetime = 20f;
                 backColor = Pal.heal;
@@ -143,15 +145,71 @@ public class NewStageBlocks {
             }};
         }};
 
+        //TODO balance
+        fireSquall = new ItemTurret("FireSquall"){{
+            requirements(Category.turret, with(Items.copper, 90, Items.lead, 55, Items.titanium, 40, Items.silicon, 30));
+            ammo(
+                    Items.graphite, new BasicBulletType(5f, 9){{
+                        width = 7f;
+                        height = 11f;
+                        shootEffect = Fx.shootBig;
+                        reloadMultiplier = 0.9f;
+                        ammoMultiplier = 2;
+
+                        incendChance = 0.01f;
+                        incendSpread = 0.2f;
+                        incendAmount = 1;
+                        collideTerrain = true;
+                    }},
+                    Items.silicon, new BasicBulletType(5.5f, 13){{
+                        width = 7f;
+                        height = 11f;
+                        shootEffect = Fx.shootBig;
+                        reloadMultiplier = 1.25f;
+                        ammoMultiplier = 1;
+
+                        incendChance = 0.03f;
+                        incendSpread = 0.4f;
+                        incendAmount = 1;
+                        collideTerrain = true;
+                        collidesAir = false;
+                    }}
+            );
+            targetAir = false;
+            reload = 80;
+            recoilTime = reload * 2f;
+            coolantMultiplier = 0.5f;
+            ammoUseEffect = Fx.casing4;
+            range = 200f;
+            inaccuracy = 2.5f;
+            recoil = 3f;
+            shoot = new ShootAlternate(7f);
+            size = 2;
+            shootCone = 24f;
+            shootSound = Sounds.shootBig;
+            shoot.shots = 2;
+            ammoPerShot = 2;
+            rotateSpeed = 4.3f;
+
+            health = 460;
+            coolant = consumeCoolant(1f);
+
+            drawer = new DrawTurret("based-");
+        }};
+
         // WIP
         mistGatherer = new MistGatherer("based-block-2") {{
-            requirements(Category.power, with(Items.copper, 40, Items.lead, 30, Items.metaglass, 30, Items.silicon, 25));
+            requirements(Category.production, BuildVisibility.sandboxOnly, with(Items.copper, 40, Items.lead, 30, Items.metaglass, 30, Items.silicon, 25));
             health = 150;
             squareSprite = true;
+            pumpAmount = 0.06f;
             size = 2;
             liquidCapacity = 30;
             hasLiquids = true;
             collectEffect = NewStageFx.steamAbsorption;
+            effectChance = 0.1f;
+
+            consumePower(2.4f);
         }};
     }
 }

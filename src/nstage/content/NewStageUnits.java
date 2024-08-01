@@ -15,11 +15,11 @@ import mindustry.world.blocks.units.*;
 
 public class NewStageUnits {
     public static UnitType
-            navicula, frontis, lenta, serpen, serene/*riangulus*/, werycringe;
+            flicker, frontis, lenta, serpen, serene/*riangulus*/, werycringe;
 
     public static void load() {
-        navicula = new UnitType("navicula") {{
-            aiController = KamikazeAI::new;
+        flicker = new UnitType("flicker") {{
+            //aiController = KamikazeAI::new;
             controller = u -> new KamikazeAI();
             constructor = UnitEntity::create;
 
@@ -157,7 +157,7 @@ public class NewStageUnits {
 
         //T1
         UnitFactory airFactory = (UnitFactory) Blocks.airFactory;
-        airFactory.plans.add(new UnitFactory.UnitPlan(navicula, 160f * 5, ItemStack.with(Items.silicon, 40, Items.lead, 30)));
+        airFactory.plans.add(new UnitFactory.UnitPlan(flicker, 160f * 5, ItemStack.with(Items.silicon, 40, Items.lead, 30)));
         //T2
         /*Reconstructor additiveReconstructor = (Reconstructor) Blocks.additiveReconstructor;
         additiveReconstructor.upgrades.add(new UnitType[]{NewStageUnits.navicula, frontis});*/
