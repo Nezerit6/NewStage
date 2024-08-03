@@ -1,18 +1,24 @@
 package nstage.content;
 
 import arc.graphics.Color;
+import arc.math.Interp;
 import mindustry.content.*;
+import mindustry.entities.UnitSorts;
+import mindustry.entities.abilities.*;
 import mindustry.entities.bullet.*;
-import mindustry.entities.effect.MultiEffect;
+import mindustry.entities.effect.*;
 import mindustry.entities.part.*;
 import mindustry.entities.pattern.ShootAlternate;
 import mindustry.gen.Sounds;
-import mindustry.graphics.Pal;
+import mindustry.graphics.*;
 import mindustry.type.Category;
+import mindustry.type.Weapon;
+import mindustry.type.unit.MissileUnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
+import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.draw.DrawTurret;
-import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.*;
 import nstage.entities.bullet.*;
 import nstage.world.blocks.power.*;
 
@@ -20,7 +26,7 @@ import static mindustry.type.ItemStack.with;
 
 public class NewStageBlocks {
 
-    public static Block plasmaPunisher, stormBringer, mistGatherer, fireSquall;
+    public static Block plasmaPunisher, stormBringer, mistGatherer, fireSquall, meteorite, serpent;
 
     public static void load() {
 
@@ -123,8 +129,6 @@ public class NewStageBlocks {
                 lifetime = 20f;
                 backColor = Pal.heal;
                 frontColor = Color.white;
-                status = StatusEffects.corroded;
-                statusDuration = 240f;
                 smokeEffect = Fx.none;
                 hitEffect = despawnEffect = Fx.hitLaser;
                 hitColor = trailColor = Pal.heal;
@@ -150,8 +154,8 @@ public class NewStageBlocks {
             requirements(Category.turret, with(Items.copper, 90, Items.lead, 55, Items.titanium, 40, Items.silicon, 30));
             ammo(
                     Items.graphite, new BasicBulletType(5f, 9){{
-                        width = 7f;
-                        height = 11f;
+                        width = 10f;
+                        height = 16f;
                         shootEffect = Fx.shootBig;
                         reloadMultiplier = 0.9f;
                         ammoMultiplier = 2;
@@ -162,11 +166,12 @@ public class NewStageBlocks {
                         collideTerrain = true;
                     }},
                     Items.silicon, new BasicBulletType(5.5f, 13){{
-                        width = 7f;
-                        height = 11f;
+                        width = 10f;
+                        height = 16f;
                         shootEffect = Fx.shootBig;
                         reloadMultiplier = 1.25f;
                         ammoMultiplier = 1;
+                        lifetime = 32f;
 
                         incendChance = 0.03f;
                         incendSpread = 0.4f;
@@ -192,7 +197,7 @@ public class NewStageBlocks {
             rotateSpeed = 4.3f;
 
             health = 460;
-            coolant = consumeCoolant(1f);
+            coolant = consumeCoolant(0.2f);
 
             drawer = new DrawTurret("based-");
         }};
@@ -202,7 +207,7 @@ public class NewStageBlocks {
             requirements(Category.production, BuildVisibility.sandboxOnly, with(Items.copper, 40, Items.lead, 30, Items.metaglass, 30, Items.silicon, 25));
             health = 150;
             squareSprite = true;
-            pumpAmount = 0.06f;
+            pumpAmount = 0.11f;
             size = 2;
             liquidCapacity = 30;
             hasLiquids = true;
@@ -211,5 +216,160 @@ public class NewStageBlocks {
 
             consumePower(2.4f);
         }};
+
+        meteorite = new ItemTurret("Meteorite") {{
+            requirements(Category.turret, with(Items.copper, 490, Items.titanium, 370, Items.silicon, 285, Items.thorium, 150));
+            recoil = 0.5f;
+
+            fogRadiusMultiplier = 0.4f;
+            coolantMultiplier = 6f;
+            shootSound = Sounds.missileLaunch;
+            squareSprite = true;
+            minWarmup = 0.94f;
+            targetInterval = 40f;
+            unitSort = UnitSorts.strongest;
+            shootWarmupSpeed = 0.03f;
+            targetAir = false;
+            targetUnderBlocks = false;
+
+            shake = 6f;
+            ammoPerShot = 15;
+            maxAmmo = 30;
+            outlineColor = Pal.darkOutline;
+            size = 3;
+            envEnabled |= Env.space;
+            reload = 1250f;
+            range = 950;
+            shootCone = 1f;
+            scaledHealth = 220;
+            rotateSpeed = 0.9f;
+            shootY = 9.5f;
+
+            consumePower(4.4f);
+            coolant = consume(new ConsumeLiquid(Liquids.cryofluid, 0.2f));
+            limitRange();
+
+            ammo(
+                    Items.titanium, new BasicBulletType(0, 0) {{
+                        shootEffect = Fx.shootBig;
+                        smokeEffect = Fx.shootSmallSmoke;
+                        ammoMultiplier = 1f;
+
+                        spawnUnit = new MissileUnitType("Meteorite-missile"){{
+                            speed = 4.15f;
+                            maxRange = 6f;
+                            lifetime = 60f * 5.5f;
+                            outlineColor = Pal.darkOutline;
+                            engineColor = trailColor = NewStagePal.pink;
+                            engineLayer = Layer.effect;
+                            engineSize = 2.9f;
+                            engineOffset = 8f;
+                            rotateSpeed = 0.75f;
+                            trailLength = 3;
+                            trailEffect = Fx.greenBomb;
+                            trailRotation = true;
+                            trailInterval = 3f;
+                            missileAccelTime = 50f;
+                            lowAltitude = true;
+                            loopSound = Sounds.missileTrail;
+                            loopSoundVolume = 0.6f;
+                            deathSound = Sounds.largeExplosion;
+                            targetAir = true;
+                            targetUnderBlocks = false;
+
+                            fogRadius = 6f;
+
+                            health = 210;
+
+                            weapons.add(new Weapon(){{
+                                shootCone = 360f;
+                                mirror = false;
+                                reload = 1f;
+                                deathExplosionEffect = Fx.massiveExplosion;
+                                shootOnDeath = true;
+                                shake = 10f;
+                                bullet = new ExplosionBulletType(650f, 45f){{
+                                    hitColor = NewStagePal.pink;
+                                    shootEffect = new MultiEffect(Fx.massiveExplosion, Fx.scatheExplosion, Fx.scatheLight, new WaveEffect(){{
+                                        lifetime = 10f;
+                                        strokeFrom = 4f;
+                                        sizeTo = 130f;
+                                    }});
+
+                                    collidesAir = true;
+                                    buildingDamageMultiplier = 1f;
+                                    ammoMultiplier = 1f;
+
+                                }};
+                            }});
+
+                            abilities.add(new MoveEffectAbility(){{
+                                //effect = Fx.missileTrailSmoke;
+                                effect = Fx.artilleryTrailSmoke;
+                                rotation = 180f;
+                                y = -12f;
+                                color = NewStagePal.pink;
+                                //interval = 10.5f;
+                            }});
+                        }};
+                    }}
+            );
+
+            drawer = new DrawTurret("based-") {{
+                parts.add(new RegionPart("-missile") {{
+                    progress = PartProgress.reload.curve(Interp.pow2In);
+
+                    colorTo = new Color(1f, 1f, 1f, 0f);
+                    color = Color.white;
+                    mixColorTo = Pal.accent;
+                    mixColor = new Color(1f, 1f, 1f, 0f);
+                    outline = false;
+                    under = true;
+
+                    layerOffset = -0.01f;
+
+                    moves.add(new PartMove(PartProgress.reload.inv(), 0f, 2.5f, 0f));
+                    moves.add(new PartMove(PartProgress.warmup, 0f, 3f, 0f));
+                }});
+            }};
+        }};
+
+        serpent = new PowerTurret("Serpent"){{
+            requirements(Category.turret, with(Items.copper, 75, Items.lead, 90, Items.titanium, 40, Items.silicon, 55));
+            size = 2;
+            range = 140;
+            recoil = 2f;
+            reload = 120f;
+            health = 530;
+            rotateSpeed = 3;
+            //shootEffect = smokeEffect = destroyEffect = placeEffect = Fx.none;
+
+            shoot = new ShootAlternate(10){{
+                shots = 2;
+            }};
+
+            shootSound = Sounds.laser;
+
+            consumePower(1.4f);
+            coolant = consumeCoolant(0.2f);
+
+            shootType = new LaserBulletType(60) {{
+
+                lifetime = 20f;
+                //smokeEffect = hitEffect = shootEffect = Fx.none;
+
+                //hitColor = trailColor = Pal.heal;
+                trailLength = 2;
+                trailWidth = 1.8f;
+                lightningLength = 16;
+                lightningColor = Color.valueOf("feb380");
+                sideAngle = 45f;
+                sideWidth = 1f;
+                sideLength = 15f;
+                colors = new Color[]{Color.valueOf("feb380").cpy().a(0.4f), Color.valueOf("feb380"), Color.white};
+            }};
+
+            drawer = new DrawTurret("based-");
+            }};
     }
 }

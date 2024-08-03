@@ -42,6 +42,8 @@ public class MistGatherer extends GenericCrafter {
         size = 2;
         outputLiquid = new LiquidStack(Liquids.water, pumpAmount / 60f);
         config(Float.class, (MistGathererBuild tile, Float f) -> tile.pumpAmount = f);
+        consumePower(2.4f);
+        craftTime = 0;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class MistGatherer extends GenericCrafter {
     @Override
     public void setStats() {
         super.setStats();
+        stats.remove(Stat.productionTime);
         stats.add(Stat.output, pumpAmount * 60f, StatUnit.liquidSecond);
     }
 
@@ -84,10 +87,10 @@ public class MistGatherer extends GenericCrafter {
                 updateEfficiency();
             }
 
-            if (efficiency > 0) {
-                float producedWater = pumpAmount * efficiency * delta() / 60f;
+            if (efficiency > 0 && power.status > 0) {
+                float producedWater = pumpAmount * efficiency * delta();
                 if (producedWater > 0) {
-                    handleLiquid(this, Liquids.water, producedWater);
+                    liquids.add(outputLiquid.liquid, producedWater);
                 }
 
                 if (Mathf.chance(effectChance * delta() * efficiency)) {
@@ -97,7 +100,7 @@ public class MistGatherer extends GenericCrafter {
                 time += delta() * efficiency;
             }
 
-            transferWater();
+            dumpLiquid(outputLiquid.liquid);
         }
 
         private void updateEfficiency() {

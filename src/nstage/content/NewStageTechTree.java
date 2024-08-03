@@ -15,8 +15,12 @@ public class NewStageTechTree {
 
     public static void load() {
         margeNode(Blocks.lancer, () -> {
-            node(NewStageBlocks.plasmaPunisher, () -> {
-                node(NewStageBlocks.stormBringer);
+            node(NewStageBlocks.serpent, () -> {
+                node(NewStageBlocks.plasmaPunisher, () -> {
+                    node(NewStageBlocks.stormBringer, () -> {
+                        node(NewStageBlocks.meteorite);
+                    });
+                });
             });
         });
         margeNode(Blocks.scorch, () -> {
@@ -26,7 +30,6 @@ public class NewStageTechTree {
             node(NewStageUnits.flicker);
         });
     }
-
 
     private static void margeNode(UnlockableContent parent, Runnable children) {
         context = TechTree.all.find(t -> t.content == parent);
