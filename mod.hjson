@@ -6,9 +6,9 @@ author: "Nezerit6"
 
 main: "nstage.NewStage"
 
-description: "Hi"
+description: "Where description?"
 
-version: "pre-alpha 0.1.5.3"
+version: "pre-alpha 0.1.6.8"
 
 minGameVersion: 146
 

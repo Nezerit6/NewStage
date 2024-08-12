@@ -13,7 +13,7 @@ import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.world.blocks.units.*;
 
-public class NewStageUnits {
+public class NSUnits {
     public static UnitType
             flicker, frontis, lenta, serpen, serene/*riangulus*/, werycringe;
 

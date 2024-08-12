@@ -6,7 +6,7 @@ import arc.assets.loaders.SoundLoader;
 import arc.audio.Sound;
 import mindustry.Vars;
 
-public class NewStageSounds {
+public class NSSounds {
     public static Sound placeholder,
 
     bigLaserShoot = new Sound(),

@@ -2,6 +2,7 @@ package nstage.content;
 
 import arc.struct.Seq;
 import mindustry.content.Blocks;
+import mindustry.content.Items;
 import mindustry.content.UnitTypes;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Objectives;
@@ -10,24 +11,33 @@ import mindustry.content.TechTree;
 
 import static mindustry.content.TechTree.*;
 
-public class NewStageTechTree {
+public class NSTechTree {
     public static TechNode context;
 
     public static void load() {
         margeNode(Blocks.lancer, () -> {
-            node(NewStageBlocks.serpent, () -> {
-                node(NewStageBlocks.plasmaPunisher, () -> {
-                    node(NewStageBlocks.stormBringer, () -> {
-                        node(NewStageBlocks.meteorite);
+            //node(NSBlocks.serpent, () -> {
+                node(NSBlocks.plasmaPunisher, () -> {
+                    node(NSBlocks.stormBringer, () -> {
+                        node(NSBlocks.meteorite);
                     });
                 });
             });
-        });
+        //});
         margeNode(Blocks.scorch, () -> {
-            node(NewStageBlocks.fireSquall);
+            node(NSBlocks.fireSquall);
         });
         margeNode(UnitTypes.flare, () -> {
-            node(NewStageUnits.flicker);
+            node(NSUnits.flicker);
+        });
+        margeNode(Blocks.waterExtractor, () -> {
+            node(NSBlocks.mistGatherer);
+        });
+        margeNode(Blocks.siliconCrucible, () -> {
+            node(NSBlocks.carborundumCrucible);
+        });
+        margeNode(Items.titanium, () -> {
+            node(NSItems.carborundum);
         });
     }
 

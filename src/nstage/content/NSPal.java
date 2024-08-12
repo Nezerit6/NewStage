@@ -3,7 +3,7 @@ package nstage.content;
 import arc.graphics.Color;
 import mindustry.graphics.Pal;
 
-public class NewStagePal extends Pal {
+public class NSPal extends Pal {
     public static Color
 
     pink = Color.valueOf("ffc3e4"),

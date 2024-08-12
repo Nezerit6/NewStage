@@ -7,7 +7,7 @@ import mindustry.entities.*;
 import mindustry.gen.*;
 import mindustry.world.blocks.distribution.*;
 import mindustry.world.blocks.liquid.*;
-import nstage.content.NewStageSounds;
+import nstage.content.NSSounds;
 
 public class KamikazeAI extends FlyingAI {
     private static final float HEALTH_THRESHOLD = 0.35f;
@@ -73,7 +73,7 @@ public class KamikazeAI extends FlyingAI {
 
     private void checkForExplosion() {
         if (!playedSound && unit.healthf() <= HEALTH_THRESHOLD) {
-            NewStageSounds.kamikaze.at(unit.x, unit.y);
+            NSSounds.kamikaze.at(unit.x, unit.y);
             playedSound = true;
         }
 

@@ -1,44 +1,45 @@
 package nstage;
 
-import arc.util.*;
+import arc.func.Func;
 import mindustry.mod.*;
 import nstage.content.*;
 
+import java.util.*;
+
+import static arc.Core.bundle;
+import static mindustry.Vars.*;
+
 public class NewStage extends Mod{
 
-    public NewStage(){
-        Log.info("Loaded NewStage constructor.");
+    @Override
+    public void init() {
+        super.init();
+        Mods.LoadedMod mod = mods.locateMod("nstage");
+        if (!headless) {
+            //from Omaloon by xStaBUx
+            Func<String, String> stringf = value -> bundle.get("mod." + value);
 
-        /**Events.on(ClientLoadEvent.class, e -> {
-            Time.runTask(10f, () -> {
-                BaseDialog frogDialog = new BaseDialog("frog");
-                frogDialog.cont.add("behold").row();
-                frogDialog.cont.image(Core.atlas.find("nstage-frog")).pad(50f).row();
-                frogDialog.cont.button("I see", frogDialog::hide).size(100f, 50f);
-                frogDialog.show();
-
-                frogDialog.hidden(()-> {
-                    Time.runTask(1f, () -> {
-                        BaseDialog secondDialog = new BaseDialog("Second Dialog");
-                        secondDialog.cont.add("This dialog appears after closing the frog dialog.").row();
-                        secondDialog.cont.button("Close", secondDialog::hide).size(100f, 50f);
-                        secondDialog.show();
-                    });
-                });
-            });
-        });*/
+            mod.meta.displayName = stringf.get(mod.meta.name + ".name");
+            String[] r = {
+                    bundle.get("mod.nstage.subtitle1"),
+                    bundle.get("mod.nstage.subtitle2")
+            };
+            Random rand = new Random();
+            String f = String.valueOf(
+                    r[rand.nextInt(r.length)]
+            );
+            mod.meta.subtitle = f + "\n\n" + "[#87ceeb]" + mod.meta.version + "[]";
+        }
     }
 
     @Override
     public void loadContent(){
-        Log.info("Loading some nstage content.");
 
-        NewStageSounds.load();
-        NewStageItems.load();
-        NewStageUnits.load();
-        NewStageBlocks.load();
-        NewStageTechTree.load();
-
+        NSSounds.load();
+        NSItems.load();
+        NSUnits.load();
+        NSBlocks.load();
+        NSTechTree.load();
     }
 }
 /*

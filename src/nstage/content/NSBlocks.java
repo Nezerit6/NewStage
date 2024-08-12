@@ -12,21 +12,24 @@ import mindustry.entities.pattern.ShootAlternate;
 import mindustry.gen.Sounds;
 import mindustry.graphics.*;
 import mindustry.type.Category;
+import mindustry.type.ItemStack;
 import mindustry.type.Weapon;
 import mindustry.type.unit.MissileUnitType;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.turrets.*;
 import mindustry.world.consumers.ConsumeLiquid;
-import mindustry.world.draw.DrawTurret;
+import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 import nstage.entities.bullet.*;
 import nstage.world.blocks.power.*;
+import nstage.world.blocks.production.HatchCrafter;
 
 import static mindustry.type.ItemStack.with;
+import static nstage.entities.bullet.LocLightning.*;
 
-public class NewStageBlocks {
+public class NSBlocks {
 
-    public static Block plasmaPunisher, stormBringer, mistGatherer, fireSquall, meteorite, serpent;
+    public static Block plasmaPunisher, stormBringer, mistGatherer, fireSquall, meteorite, serpent, carborundumCrucible, radiant;
 
     public static void load() {
 
@@ -45,10 +48,10 @@ public class NewStageBlocks {
             squareSprite = false;
             extinguish = false;
             targetAir = false;
-            shootSound = NewStageSounds.bigLaserShoot;
+            shootSound = NSSounds.bigLaserShoot;
             loopSound = Sounds.none;
             shootEffect = Fx.none;
-            smokeEffect = NewStageFx.laserSparks;
+            smokeEffect = NSFx.laserSparks;
             moveWhileCharging = false;
             accurateDelay = false;
             shoot.firstShotDelay = 60f;
@@ -119,7 +122,7 @@ public class NewStageBlocks {
             shoot.firstShotDelay = 15f;
 
             shootEffect = Fx.sparkShoot;
-            shootSound = NewStageSounds.smallLaserShoot;
+            shootSound = NSSounds.smallLaserShoot;
 
             consumePower(1.4f);
             coolant = consumeCoolant(0.2f);
@@ -165,13 +168,13 @@ public class NewStageBlocks {
                         incendAmount = 1;
                         collideTerrain = true;
                     }},
-                    Items.silicon, new BasicBulletType(5.5f, 13){{
+                    Items.silicon, new BasicBulletType(3.1f, 13){{
                         width = 10f;
                         height = 16f;
                         shootEffect = Fx.shootBig;
                         reloadMultiplier = 1.25f;
                         ammoMultiplier = 1;
-                        lifetime = 32f;
+                        lifetime = 90f;
 
                         incendChance = 0.03f;
                         incendSpread = 0.4f;
@@ -203,7 +206,7 @@ public class NewStageBlocks {
         }};
 
         // WIP
-        mistGatherer = new MistGatherer("based-block-2") {{
+        mistGatherer = new MistGatherer("mistGatherer") {{
             requirements(Category.production, BuildVisibility.sandboxOnly, with(Items.copper, 40, Items.lead, 30, Items.metaglass, 30, Items.silicon, 25));
             health = 150;
             squareSprite = true;
@@ -211,14 +214,22 @@ public class NewStageBlocks {
             size = 2;
             liquidCapacity = 30;
             hasLiquids = true;
-            collectEffect = NewStageFx.steamAbsorption;
+            collectEffect = NSFx.steamAbsorption;
             effectChance = 0.1f;
+
+            drawer = new DrawMulti(
+                    new DrawDefault(),
+                    new DrawLiquidRegion()/*,
+                    new DrawRegion("-rotator"){{
+                        rotateSpeed = 3;
+                    }}*/
+            );
 
             consumePower(2.4f);
         }};
 
         meteorite = new ItemTurret("Meteorite") {{
-            requirements(Category.turret, with(Items.copper, 490, Items.titanium, 370, Items.silicon, 285, Items.thorium, 150));
+            requirements(Category.turret, with(Items.titanium, 120, Items.plastanium, 40, NSItems.carborundum, 30));
             recoil = 0.5f;
 
             fogRadiusMultiplier = 0.4f;
@@ -233,8 +244,8 @@ public class NewStageBlocks {
             targetUnderBlocks = false;
 
             shake = 6f;
-            ammoPerShot = 15;
-            maxAmmo = 30;
+            ammoPerShot = 10;
+            maxAmmo = 20;
             outlineColor = Pal.darkOutline;
             size = 3;
             envEnabled |= Env.space;
@@ -250,7 +261,7 @@ public class NewStageBlocks {
             limitRange();
 
             ammo(
-                    Items.titanium, new BasicBulletType(0, 0) {{
+                    NSItems.carborundum, new BasicBulletType(0, 0) {{
                         shootEffect = Fx.shootBig;
                         smokeEffect = Fx.shootSmallSmoke;
                         ammoMultiplier = 1f;
@@ -260,7 +271,7 @@ public class NewStageBlocks {
                             maxRange = 6f;
                             lifetime = 60f * 5.5f;
                             outlineColor = Pal.darkOutline;
-                            engineColor = trailColor = NewStagePal.pink;
+                            engineColor = trailColor = NSPal.pink;
                             engineLayer = Layer.effect;
                             engineSize = 2.9f;
                             engineOffset = 8f;
@@ -289,7 +300,7 @@ public class NewStageBlocks {
                                 shootOnDeath = true;
                                 shake = 10f;
                                 bullet = new ExplosionBulletType(650f, 45f){{
-                                    hitColor = NewStagePal.pink;
+                                    hitColor = NSPal.pink;
                                     shootEffect = new MultiEffect(Fx.massiveExplosion, Fx.scatheExplosion, Fx.scatheLight, new WaveEffect(){{
                                         lifetime = 10f;
                                         strokeFrom = 4f;
@@ -308,7 +319,7 @@ public class NewStageBlocks {
                                 effect = Fx.artilleryTrailSmoke;
                                 rotation = 180f;
                                 y = -12f;
-                                color = NewStagePal.pink;
+                                color = NSPal.pink;
                                 //interval = 10.5f;
                             }});
                         }};
@@ -334,18 +345,22 @@ public class NewStageBlocks {
             }};
         }};
 
-        serpent = new PowerTurret("Serpent"){{
+        /*
+        //WIIIIIIIIIIIIIP
+        serpent = new PowerTurret("serpent"){{
             requirements(Category.turret, with(Items.copper, 75, Items.lead, 90, Items.titanium, 40, Items.silicon, 55));
             size = 2;
             range = 140;
             recoil = 2f;
-            reload = 120f;
+
+            reload = 105f;
             health = 530;
             rotateSpeed = 3;
             //shootEffect = smokeEffect = destroyEffect = placeEffect = Fx.none;
 
             shoot = new ShootAlternate(10){{
                 shots = 2;
+                shotDelay = 25f;
             }};
 
             shootSound = Sounds.laser;
@@ -354,10 +369,8 @@ public class NewStageBlocks {
             coolant = consumeCoolant(0.2f);
 
             shootType = new LaserBulletType(60) {{
-
-                lifetime = 20f;
+                lifetime = 25f;
                 //smokeEffect = hitEffect = shootEffect = Fx.none;
-
                 //hitColor = trailColor = Pal.heal;
                 trailLength = 2;
                 trailWidth = 1.8f;
@@ -365,11 +378,97 @@ public class NewStageBlocks {
                 lightningColor = Color.valueOf("feb380");
                 sideAngle = 45f;
                 sideWidth = 1f;
+                recoil = 45;
+                recoils = 2;
+                recoilTime = 30;
                 sideLength = 15f;
                 colors = new Color[]{Color.valueOf("feb380").cpy().a(0.4f), Color.valueOf("feb380"), Color.white};
             }};
 
-            drawer = new DrawTurret("based-");
+            drawer = new DrawTurret("based-"){{
+                    parts.add(
+                            new RegionPart("-side-l"){{
+                                progress = PartProgress.recoil;
+                                recoilIndex = 1;
+                                under = true;
+                                moveY = -3.5f;
+                                //mirror = false;
+                            }},
+                            new RegionPart("-side-r"){{
+                                progress = PartProgress.recoil;
+                                recoilIndex = 2;
+                                under = true;
+                                moveY = -3.5f;
+                                //mirror = false;
+                            }}
+                    );
             }};
+        }};*/
+
+        carborundumCrucible = new HatchCrafter("carborundum-crucible"){{
+            requirements(Category.crafting, with(Items.titanium, 120, Items.silicon, 80, Items.graphite, 65, Items.plastanium, 50));
+            size = 3;
+
+            itemCapacity = 20;
+            craftTime = 60f * 6f;
+            liquidCapacity = 80f * 3;
+
+            ambientSound = Sounds.smelter;
+            ambientSoundVolume = 0.9f;
+            hasLiquids = true;
+
+            outputItem = new ItemStack(NSItems.carborundum, 2);
+
+            craftEffect = new RadialEffect(NSFx.steamSplash, 4, 90f, 7f){{
+                rotationOffset = 45;
+            }};
+
+            consumeItems(with(Items.silicon, 2, Items.graphite, 2, Items.sand, 1));
+            consumeLiquid(Liquids.water, 20f / 60f);
+            consumePower(3.2f);
+        }};
+
+        radiant = new PowerTurret("radiant"){{
+           requirements(Category.turret, BuildVisibility.sandboxOnly, with(Items.copper, 1));
+
+            shootType = new LocLightningBullet(){{
+                damage = 2f;
+                maxRange = 20f / 2f;
+                lightningColor = Color.valueOf("e8d174");
+                collidesAir = false;
+                lifetime = Fx.lightning.lifetime;
+                shootEffect = smokeEffect = hitEffect = Fx.none;
+                status = StatusEffects.shocked;
+                statusDuration = 30f;
+                hittable = false;
+                buildingDamageMultiplier = 0.25f;
+
+                shoot = new ShootAlternate(11){{
+                    shots = 2;
+                }};
+            }};
+
+            effectLifetime = 4;
+            shoot.shots = 150;
+            shoot.shotDelay = 1.5f;
+            shoot.firstShotDelay = 35;
+            reload = 280f;
+            shootEffect = smokeEffect = Fx.none;
+            coolEffect = Fx.none;
+            rotateSpeed = 3f;
+            targetAir = false;
+            predictTarget = false;
+            range = 230f;
+            recoil = 1f;
+            size = 3;
+            health = 260;
+            playerControllable = false;
+            shootSound = Sounds.bolt;
+
+            consumePower(4.3f);
+            outlineColor = Pal.darkOutline;
+
+            drawer = new DrawTurret("based-");
+        }};
     }
 }
