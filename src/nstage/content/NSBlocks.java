@@ -21,15 +21,18 @@ import mindustry.world.consumers.ConsumeLiquid;
 import mindustry.world.draw.*;
 import mindustry.world.meta.*;
 import nstage.entities.bullet.*;
+import nstage.world.blocks.ShieldCore;
 import nstage.world.blocks.power.*;
 import nstage.world.blocks.production.HatchCrafter;
 
 import static mindustry.type.ItemStack.with;
-import static nstage.entities.bullet.LocLightning.*;
 
 public class NSBlocks {
 
-    public static Block plasmaPunisher, stormBringer, mistGatherer, fireSquall, meteorite, serpent, carborundumCrucible, radiant;
+    public static Block plasmaPunisher, stormBringer, mistGatherer,
+            fireSquall, meteorite, serpent,
+            carborundumCrucible, radiant, testCore,
+            fst;
 
     public static void load() {
 
@@ -345,33 +348,27 @@ public class NSBlocks {
             }};
         }};
 
-        /*
         //WIIIIIIIIIIIIIP
         serpent = new PowerTurret("serpent"){{
             requirements(Category.turret, with(Items.copper, 75, Items.lead, 90, Items.titanium, 40, Items.silicon, 55));
             size = 2;
             range = 140;
-            recoil = 2f;
+            recoil = 1f;
+            targetAir = false;
 
-            reload = 105f;
-            health = 530;
+            reload = 55f;
+            health = 980;
             rotateSpeed = 3;
             //shootEffect = smokeEffect = destroyEffect = placeEffect = Fx.none;
-
-            shoot = new ShootAlternate(10){{
-                shots = 2;
-                shotDelay = 25f;
-            }};
 
             shootSound = Sounds.laser;
 
             consumePower(1.4f);
             coolant = consumeCoolant(0.2f);
-
-            shootType = new LaserBulletType(60) {{
+            shootType = new LaserBulletType(50) {{
+                buildingDamageMultiplier = 0.25f;
                 lifetime = 25f;
-                //smokeEffect = hitEffect = shootEffect = Fx.none;
-                //hitColor = trailColor = Pal.heal;
+                collidesAir = false;
                 trailLength = 2;
                 trailWidth = 1.8f;
                 lightningLength = 16;
@@ -379,31 +376,54 @@ public class NSBlocks {
                 sideAngle = 45f;
                 sideWidth = 1f;
                 recoil = 45;
-                recoils = 2;
                 recoilTime = 30;
                 sideLength = 15f;
                 colors = new Color[]{Color.valueOf("feb380").cpy().a(0.4f), Color.valueOf("feb380"), Color.white};
             }};
 
+            shoot = new ShootAlternate(10);
+
+            recoils = 2;
             drawer = new DrawTurret("based-"){{
-                    parts.add(
-                            new RegionPart("-side-l"){{
-                                progress = PartProgress.recoil;
-                                recoilIndex = 1;
-                                under = true;
-                                moveY = -3.5f;
-                                //mirror = false;
-                            }},
-                            new RegionPart("-side-r"){{
-                                progress = PartProgress.recoil;
-                                recoilIndex = 2;
-                                under = true;
-                                moveY = -3.5f;
-                                //mirror = false;
-                            }}
-                    );
+                for(int i = 0; i < 2; i ++){
+                    int f = i;
+                    parts.add(new RegionPart("-barrel-" + (i == 0 ? "l" : "r")){{
+                        progress = PartProgress.recoil;
+                        recoilIndex = f;
+                        under = true;
+                        moveY = -3.5f;
+                    }});
+                }
             }};
-        }};*/
+        }};
+
+        testCore = new ShieldCore("regen-core"){{
+            requirements(Category.effect, BuildVisibility.sandboxOnly, with(Items.copper, 1));
+            size = 2;
+            /*regenRange = 30f;
+            reloadTime = 60f;
+            healAmount = 24f;
+            sectors = 4;*/
+            additionActivation = 0.8f;
+
+            spawnTime = 60f * 3f;
+
+            deflectEffect = Fx.hitBulletSmall;
+            radius = 30f;
+            regen = 0.1f;
+            shieldHealth = 100f;
+            cooldownTime = 60f * 7;
+            angle = 80f;
+            width = 6f;
+            shields = 2;
+            rotationSpeed = 1.2f;
+
+            unitType = UnitTypes.alpha;
+            health = 1100;
+            itemCapacity = 4000;
+
+            unitCapModifier = 8;
+        }};
 
         carborundumCrucible = new HatchCrafter("carborundum-crucible"){{
             requirements(Category.crafting, with(Items.titanium, 120, Items.silicon, 80, Items.graphite, 65, Items.plastanium, 50));
@@ -433,6 +453,7 @@ public class NSBlocks {
 
             shootType = new LocLightningBullet(){{
                 damage = 2f;
+                //effectLifetime = 4;
                 maxRange = 20f / 2f;
                 lightningColor = Color.valueOf("e8d174");
                 collidesAir = false;
@@ -448,7 +469,6 @@ public class NSBlocks {
                 }};
             }};
 
-            effectLifetime = 4;
             shoot.shots = 150;
             shoot.shotDelay = 1.5f;
             shoot.firstShotDelay = 35;
@@ -470,5 +490,136 @@ public class NSBlocks {
 
             drawer = new DrawTurret("based-");
         }};
+
+        fst = new PowerTurret("fst") {{
+            requirements(Category.turret, BuildVisibility.sandboxOnly, with(Items.copper, 1));
+            outlineColor = Color.valueOf("2d2630");
+            targetAir = true;
+            targetGround = true;
+            rotateSpeed = 2f;
+            size = 2;
+            health = 2120;
+            range = 120f;
+            reload = 750;
+            recoil = 12;
+            shootSound = Sounds.plasmaboom;
+            consumePower(4.3f);
+
+            shootType = new BasicBulletType() {{
+                /*chargeEffect = Fx.diluvioCharge;
+                despawnEffect = unitFx.blueHitBig;*/
+                hittable = false;
+                width = 23;
+                height = 23;
+                backColor = Color.valueOf("d8f3f4");
+                frontColor = Color.white;
+                shrinkX = 0;
+                shrinkY = 0;
+                lifetime = 80;
+                damage = 350;
+                lightRadius = 70f;
+                lightColor = Color.valueOf("d8f3f4");
+                clipSize = 250f;
+                sprite = "large-orb";
+                speed = 1.5f;
+                splashDamage = 90f;
+                splashDamageRadius = 50;
+                hitShake = 4f;
+                soundPitchMin = 1;
+                soundPitchMax = 1.2f;
+                hitSound = Sounds.plasmaboom;
+                //hitEffect = unitFx.diluvioHit;
+            }};
+
+            drawer = new DrawTurret("") {{
+                parts.add(new RegionPart("-ala") {{
+                    moves.add(new PartMove(PartProgress.charge.curve(Interp.circleIn), -3, 3, 35));
+                    moves.add(new PartMove(PartProgress.recoil.curve(Interp.pow2In), -3, 3, 35));
+                    mirror = true;
+                    under = true;
+                    layerOffset = -0.0001f;
+                    heatProgress = PartProgress.charge.curve(Interp.circleIn);
+                }});
+            }};
+        }};
+
+        /*
+        fst = new PowerTurret("fst"){{
+            requirements(Category.turret, BuildVisibility.sandboxOnly, with(Items.copper, 1));
+
+            size = 2;
+            recoil = 2f;
+            reload = 100f;
+            health = 530;
+            inaccuracy = 6;
+            rotateSpeed = 4;
+            consumePower(1.4f);
+
+            shootType = new  BasicBulletType(){{
+
+                /*shootEffect = new MultiEffect(Fx.shootTitan, new WaveEffect(){{
+                    colorTo = Pal.sapBulletBack;
+                    sizeTo = 26f;
+                    lifetime = 14f;
+                    strokeFrom = 4f;
+                }});*
+                smokeEffect = Fx.shootSmokeTitan;
+                hitColor = Pal.lancerLaser;
+                despawnSound = Sounds.spark;
+
+                sprite = "large-orb";
+                pierceCap = 4;
+                //trailEffect = Fx.missileTrail;
+                trailInterval = 3f;
+                trailParam = 4f;
+                speed = 3f;
+                damage = 13f;
+                lifetime = 60f;
+                width = height = 15f;
+                backColor = NSPal.darkPink;
+                frontColor = NSPal.pink;
+                shrinkX = shrinkY = 0f;
+                trailColor = NSPal.darkPink;
+                trailLength = 12;
+                trailWidth = 2.2f;
+                despawnEffect = hitEffect = new ExplosionEffect(){{
+                    frontColor = NSPal.pink;
+                    smokeColor = Color.gray;
+                    sparkColor = Pal.sap;
+                    waveStroke = 4f;
+                    waveRad = 40f;
+                }};
+
+                intervalBullet = new LightningBulletType(){{
+                    damage = 16;
+                    collidesAir = false;
+                    ammoMultiplier = 1f;
+                    frontColor = NSPal.pink;
+                    lightningLength = 3;
+                    lightningLengthRand = 6;
+
+                    buildingDamageMultiplier = 0.25f;
+
+                    lightningType = new BulletType(0.0001f, 0f){{
+                        lifetime = Fx.lightning.lifetime;
+                        hitEffect = Fx.hitLancer;
+                        despawnEffect = Fx.none;
+                        status = StatusEffects.shocked;
+                        statusDuration = 10f;
+                        hittable = false;
+                        lightColor = Color.white;
+                        buildingDamageMultiplier = 0.25f;
+                    }};
+                }};
+
+                bulletInterval = 4f;
+
+                frontColor = NSPal.pink;
+                lightningDamage = 17;
+                lightning = 8;
+                lightningLength = 2;
+                lightningLengthRand = 8;
+            }};
+        }};*/
     }
 }

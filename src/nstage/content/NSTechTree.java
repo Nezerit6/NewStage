@@ -16,14 +16,14 @@ public class NSTechTree {
 
     public static void load() {
         margeNode(Blocks.lancer, () -> {
-            //node(NSBlocks.serpent, () -> {
+            node(NSBlocks.serpent, () -> {
                 node(NSBlocks.plasmaPunisher, () -> {
                     node(NSBlocks.stormBringer, () -> {
                         node(NSBlocks.meteorite);
                     });
                 });
             });
-        //});
+        });
         margeNode(Blocks.scorch, () -> {
             node(NSBlocks.fireSquall);
         });
