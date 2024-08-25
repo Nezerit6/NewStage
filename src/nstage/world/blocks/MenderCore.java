@@ -82,7 +82,7 @@ public class MenderCore extends AdditionCore {
 
             if (activationProgress > 0) {
                 Draw.alpha(activationProgress);
-                Draw.rect(additionRegion, x, y);
+                //Draw.rect(additionRegion, x, y);
                 Draw.alpha(1f);
 
                 Draw.z(layer);
