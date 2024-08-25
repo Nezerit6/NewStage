@@ -1,13 +1,12 @@
 package nstage.content;
 
 import arc.struct.Seq;
-import mindustry.content.Blocks;
-import mindustry.content.Items;
-import mindustry.content.UnitTypes;
+import mindustry.content.*;
 import mindustry.ctype.UnlockableContent;
 import mindustry.game.Objectives;
 import mindustry.type.ItemStack;
 import mindustry.content.TechTree;
+import nstage.content.blocks.NSTurrets;
 
 import static mindustry.content.TechTree.*;
 
@@ -16,16 +15,16 @@ public class NSTechTree {
 
     public static void load() {
         margeNode(Blocks.lancer, () -> {
-            node(NSBlocks.serpent, () -> {
-                node(NSBlocks.plasmaPunisher, () -> {
-                    node(NSBlocks.stormBringer, () -> {
-                        node(NSBlocks.meteorite);
+            node(NSTurrets.serpent, () -> {
+                node(NSTurrets.punisher, () -> {
+                    node(NSTurrets.storm, () -> {
+                        node(NSTurrets.eradication);
                     });
                 });
             });
         });
         margeNode(Blocks.scorch, () -> {
-            node(NSBlocks.fireSquall);
+            node(NSTurrets.squall);
         });
         margeNode(UnitTypes.flare, () -> {
             node(NSUnits.flicker);
